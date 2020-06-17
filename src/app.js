@@ -1,33 +1,34 @@
-require('dotenv').config();
-const express = require( 'express')
-const morgan = require( 'morgan')
-const path = require("path")
-const { json, urlencoded } = express
-const cors = require( 'cors')
-const { connect } = require( './db/config')
+require("dotenv").config();
+const express = require("express");
+const morgan = require("morgan");
+const path = require("path");
+const { json, urlencoded } = express;
+const cors = require("cors");
+const { connect } = require("./db/config");
+// routes
+const roomRoutes = require("./routes/room.routes");
 
-const app = express()
+const app = express();
 
+app.use(cors());
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
-app.use(cors())
-app.use(json())
-app.use(urlencoded({ extended: true }))
-app.use(morgan('dev'))
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "hbs");
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
-
+app.use("/", roomRoutes);
 
 const start = async () => {
   try {
-    await connect()
+    await connect();
     app.listen(process.env.PORT, () => {
-      console.log(`connected to server`)
-    })
+      console.log(`connected to server`);
+    });
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
-}
+};
 
-start()
+start();

@@ -9,10 +9,11 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-Room.create(rooms, (err) => {
-  if (err) {
-    throw err;
-  }
-  console.log(`Base Datos creada con e'xito ${rooms.length} places`);
+Room.create([
+  { title: "Room Green", messages: [] },
+  { title: "Room Red", messages: [] },
+  { title: "Room Blue", messages: [] },
+]).then((rooms) => {
+  console.log(rooms);
   mongoose.connection.close();
 });
