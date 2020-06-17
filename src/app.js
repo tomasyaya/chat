@@ -5,6 +5,8 @@ const path = require("path");
 const { json, urlencoded } = express;
 const cors = require("cors");
 const { connect } = require("./db/config");
+const socketio = require("socket.io");
+const { handleSockets } = require("./sockets");
 // routes
 const roomRoutes = require("./routes/room.routes");
 
@@ -23,9 +25,11 @@ app.use("/", roomRoutes);
 const start = async () => {
   try {
     await connect();
-    app.listen(process.env.PORT, () => {
+    const listener = app.listen(process.env.PORT, () => {
       console.log(`connected to server`);
     });
+    const io = socketio(listener);
+    handleSockets(io);
   } catch (e) {
     console.error(e);
   }

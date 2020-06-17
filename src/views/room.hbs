@@ -1,3 +1,13 @@
 <div>
     <h3>{{room.title}}</h3>
 </div>
+
+
+<script>
+    const socket = io("http://localhost:8000")
+    const roomId = window.location.pathname.split("/").pop()
+    socket.emit("join", { roomId })
+    socket.on("joinedRoom", msg => console.log(msg))
+    socket.emit("newMessage", { msg: "hello", roomId })
+    socket.on("newMessage", msg => console.log(msg))
+</script>
