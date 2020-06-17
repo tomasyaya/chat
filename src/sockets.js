@@ -1,3 +1,5 @@
+const Room = require("./models/Room.model");
+
 exports.handleSockets = (io) => {
   io.on("connect", (socket) => {
     socket.on("join", ({ roomId }) => {
@@ -7,7 +9,12 @@ exports.handleSockets = (io) => {
     });
 
     socket.on("newMessage", ({ msg, roomId }) => {
-      io.to(roomId).emit("newMessage", { msg });
+      Room.findByIdAndUpdate(
+        { _id: roomId },
+        { $push: { messages: { message: msg } } }
+      ).then(() => {
+        io.to(roomId).emit("newMessage", { msg });
+      });
     });
   });
 };

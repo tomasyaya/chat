@@ -1,13 +1,36 @@
 <div>
     <h3>{{room.title}}</h3>
+    {{#each room.messages}}
+    <p>{{message}}</p>
+    {{/each}}
+    <div id="messages"></div>
+    <div>
+        <input type="text" id="newMessage">
+        <button type="button">Send</button>
+    </div>
 </div>
 
 
 <script>
-    const socket = io("http://localhost:8000")
-    const roomId = window.location.pathname.split("/").pop()
-    socket.emit("join", { roomId })
-    socket.on("joinedRoom", msg => console.log(msg))
-    socket.emit("newMessage", { msg: "hello", roomId })
-    socket.on("newMessage", msg => console.log(msg))
+    const socket = io("http://localhost:8000");
+    const roomId = window.location.pathname.split("/").pop();
+    socket.emit("join", { roomId });
+    socket.on("joinedRoom", (msg) => console.log(msg));
+    socket.on("newMessage", ({ msg }) => addNewMessage(msg));
+
+    const sendBtn = document.querySelector("button")
+    sendBtn.addEventListener("click", createNewMessage)
+
+    function addNewMessage(message) {
+        const container = document.querySelector("#messages");
+        const messageTag = document.createElement("p");
+        messageTag.textContent = message;
+        container.appendChild(messageTag);
+    }
+
+    function createNewMessage() {
+        const input = document.querySelector("#newMessage")
+        socket.emit("newMessage", { msg: input.value, roomId })
+        input.value = ""
+    }
 </script>
