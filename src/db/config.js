@@ -1,4 +1,8 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-exports.connect = () => mongoose
-.connect(process.env.MONGODB_URI, {useNewUrlParser: true})
+exports.connect = () =>
+  mongoose.connect(process.env.MONGODB_URI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });

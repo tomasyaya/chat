@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require( 'express')
-const { json, urlencoded } = express
 const morgan = require( 'morgan')
+const path = require("path")
+const { json, urlencoded } = express
 const cors = require( 'cors')
 const { connect } = require( './db/config')
 
@@ -12,6 +13,9 @@ app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
 
 
